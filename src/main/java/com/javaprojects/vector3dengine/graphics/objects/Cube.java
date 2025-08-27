@@ -6,15 +6,15 @@ public class Cube {
     private Vector3D vertices[] = new Vector3D[8];
     private int[][] edges = new int [12][2];
 
-    public Cube (){
-        vertices[0] = new Vector3D(-0.5, -0.5, -0.5);
-        vertices[1] = new Vector3D(0.5, -0.5, -0.5);
-        vertices[2] = new Vector3D(0.5, 0.5, -0.5);
-        vertices[3] = new Vector3D(-0.5, 0.5, -0.5);
-        vertices[4] = new Vector3D(-0.5, -0.5, 0.5);
-        vertices[5] = new Vector3D(0.5, -0.5, 0.5);
-        vertices[6] = new Vector3D(0.5, 0.5, 0.5);
-        vertices[7] = new Vector3D(-0.5, 0.5, 0.5);
+    public Cube (double size){
+        vertices[0] = new Vector3D(-0.5, -0.5, -0.5).scale(size);
+        vertices[1] = new Vector3D(0.5, -0.5, -0.5).scale(size);
+        vertices[2] = new Vector3D(0.5, 0.5, -0.5).scale(size);
+        vertices[3] = new Vector3D(-0.5, 0.5, -0.5).scale(size);
+        vertices[4] = new Vector3D(-0.5, -0.5, 0.5).scale(size);
+        vertices[5] = new Vector3D(0.5, -0.5, 0.5).scale(size);
+        vertices[6] = new Vector3D(0.5, 0.5, 0.5).scale(size);
+        vertices[7] = new Vector3D(-0.5, 0.5, 0.5).scale(size);
 
         edges [0] = new int[]{0, 1};
         edges [1] = new int[]{1, 2};
@@ -29,9 +29,13 @@ public class Cube {
         edges [10] = new int[]{2, 6};
         edges [11] = new int[]{3, 7};
     }
+    public Cube () {
+        this(1);
+    }
+
 
     public Vector3D[] getVertices() {
-        return vertices;
+        return vertices ;
     }
 
     public int[][] getEdges() {
