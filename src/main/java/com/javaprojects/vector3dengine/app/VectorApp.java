@@ -2,6 +2,7 @@ package com.javaprojects.vector3dengine.app;
 
 import com.javaprojects.vector3dengine.graphics.engine.Camera3D;
 import com.javaprojects.vector3dengine.graphics.engine.CubeRenderer;
+import com.javaprojects.vector3dengine.graphics.engine.OctahedronRenderer;
 import com.javaprojects.vector3dengine.mathlib.matrix.Matrix4x4;
 import com.javaprojects.vector3dengine.mathlib.vector.Vector2D;
 import javafx.animation.AnimationTimer;
@@ -16,6 +17,7 @@ import javafx.scene.paint.Color;
 
 import java.awt.*;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 public class VectorApp extends Application {
@@ -24,6 +26,19 @@ public class VectorApp extends Application {
     private boolean manualMode = false;
     private double manualRotX = 0, manualRotY = 0, manualRotZ = 0;  // variaveis para armazenar a rotação manual
 
+    private static class Star {
+        double x, y, brightness;
+        double twinkleSpeed, twinkleOffset;
+        Star(double x, double y, double brightness) {
+            this.x = x;
+            this.y = y;
+            this.brightness = brightness;
+            this.twinkleSpeed = 0.5 + Math.random() * 2.0; // velocidade aleatória
+            this.twinkleOffset = Math.random() * Math.PI * 2; // fase aleatória
+        }
+    }
+
+    private Star[] stars;
 
 
 
@@ -35,6 +50,16 @@ public class VectorApp extends Application {
         Scene scene = new Scene(container, 800, 600);
         Camera3D camera = new Camera3D(400,5);
         CubeRenderer renderer = new CubeRenderer(camera);
+        OctahedronRenderer octahedronRenderer = new OctahedronRenderer(camera);
+        stars = new Star[200];
+        Random random = new Random();
+        for(int i = 0; i < stars.length; i++) {
+            stars[i] = new Star(
+                    random.nextDouble() * 800,
+                    random.nextDouble() * 600,
+                    random.nextDouble()
+            );
+        }
 
         scene.setOnKeyPressed(event -> {
             pressedKeys.add(event.getCode());
@@ -67,12 +92,18 @@ public class VectorApp extends Application {
                 // Limpar tela
                 gc.setFill(Color.BLACK);
                 gc.fillRect(0, 0, 800, 600);
+                for(Star star : stars) {
+                    double twinkle = Math.sin(time * star.twinkleSpeed + star.twinkleOffset);
+                    double alpha = star.brightness * (0.3 + 0.4 * (twinkle + 1) / 2); // Varia suavemente
+                    gc.setFill(Color.WHITE.deriveColor(0, 1, 1, alpha));
+                    gc.fillOval(star.x, star.y, 2, 2);
+                }
                 gc.setStroke(Color.WHITE);
                 gc.setLineWidth(5);
 
                 if(manualMode){
                     double rotationSpeed = 0.01;
-                    double deltaX = 0, deltaY = 0, deltaZ = 0;
+                     double deltaX = 0, deltaY = 0, deltaZ = 0;
 
                     if(pressedKeys.contains(KeyCode.W)) deltaX -= rotationSpeed;
                     if (pressedKeys.contains(KeyCode.S)) deltaX += rotationSpeed;
@@ -84,14 +115,15 @@ public class VectorApp extends Application {
                     manualRotX += deltaX;
                     manualRotY += deltaY;
                     manualRotZ += deltaZ;
-                    renderer.rotate(manualRotX, manualRotY, manualRotZ);
+                    octahedronRenderer.rotate(manualRotX, manualRotY, manualRotZ);
 
                 }
                 else {
                     // Rotacionar e renderizar
-                    renderer.rotateWithDifferentSpeeds(time);// velocidades diferentes nos 3 eixos
+                    octahedronRenderer.rotate(manualRotX, manualRotY, manualRotZ);
+
                 }
-                renderer.render(gc);
+                octahedronRenderer.render(gc);
             }
         };
         timer.start();

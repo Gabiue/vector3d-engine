@@ -57,6 +57,28 @@ public class CubeRenderer{
                 double endX = 400 + end.getX();
                 double endY = 300 - end.getY();
 
+                Color currentColor = getCurrentColor(cubeIndex);
+
+                gc.setLineWidth(20);
+                gc.setStroke(currentColor.deriveColor(0, 1, 1, 0.01));
+                gc.strokeLine(startX, startY, endX, endY);
+
+                gc.setLineWidth(16);
+                gc.setStroke(currentColor.deriveColor(0, 1, 1, 0.08));
+                gc.strokeLine(startX, startY, endX, endY);
+
+                gc.setLineWidth(6);
+                gc.setStroke(currentColor.deriveColor(0, 1, 1, 0.2));
+                gc.strokeLine(startX, startY, endX, endY);
+
+                // 2. Linha média semi-transparente
+                gc.setLineWidth(3);
+                gc.setStroke(currentColor.deriveColor(0, 1, 1, 0.6));
+                gc.strokeLine(startX, startY, endX, endY);
+
+                // 3. Linha fina sólida (core)
+                gc.setLineWidth(1);
+                gc.setStroke(currentColor);
                 gc.strokeLine(startX, startY, endX, endY);
 
 
@@ -103,6 +125,9 @@ public class CubeRenderer{
     public void rotateWithDifferentSpeeds(double time){
         for(int i = 0; i < rotationMatrices.length; i++) {
             double speedFactor = 0.5 + i * 0.3; // Fator de velocidade diferente para cada cubo
+            double pulseSpeed = 1.0 + i * 0.3; // Velocidade de pulsação diferente para cada cubo
+            double scale = 1.0 + 0.2 * Math.sin(time * pulseSpeed); // Escala pulsante
+
             double angleX = time * speedFactor;
             double angleY = time * speedFactor * 1.5;
             double angleZ = time * speedFactor * 0.8;
@@ -135,5 +160,12 @@ public class CubeRenderer{
             }
             rotationMatrices[i] = rotX.multiply(rotY).multiply(rotZ);
         }
+    }
+    private Color getCurrentColor(int cubeIndex) {
+        if(cubeIndex == 0) return Color.web("#8B00FF");
+        else if(cubeIndex == 1) return Color.web("#FF0080");
+        else if(cubeIndex == 2) return Color.web("#00FFFF");
+        else if(cubeIndex == 3) return Color.web("#FF4500");
+        else return Color.web("#00FF41");
     }
 }
