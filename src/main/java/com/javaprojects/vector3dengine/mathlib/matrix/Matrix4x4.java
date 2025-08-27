@@ -105,7 +105,7 @@ public class Matrix4x4 {
         }
         return sb.toString();
     }
-    public Matrix4x4 scale(double scaleX, double scaleY, double scaleZ) {
+    public static Matrix4x4 scale(double scaleX, double scaleY, double scaleZ) {
         Matrix4x4 scale = new Matrix4x4();
 
         scale.matrix[0][0] = scaleX;
@@ -127,7 +127,7 @@ public class Matrix4x4 {
 
         return scale;
     }
-    public Matrix4x4 translation(double translateX, double translateY, double translateZ) {
+    public static Matrix4x4 translation(double translateX, double translateY, double translateZ) {
         Matrix4x4 translation = new Matrix4x4();
 
         translation.matrix[0][0] = 1.0;
